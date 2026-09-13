@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuestionario de Perfil de Riesgo</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Font Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-slate-100 min-h-screen flex flex-col justify-between">
+
+    <header class="w-full py-6 px-6 border-b border-slate-800 bg-slate-900/50 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="bg-indigo-600 text-white p-2 rounded-xl shadow-lg shadow-indigo-500/30">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                </div>
+                <h1 class="text-xl font-bold tracking-tight bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">Asesoría Financiera Inteligente</h1>
+            </div>
+            <div class="flex items-center space-x-2">
+                <span class="text-xs font-medium px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">Test de Inversor</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow flex items-center justify-center px-4 py-12">
+        <div class="w-full max-w-2xl bg-slate-900/80 border border-slate-800 rounded-2xl shadow-2xl p-6 sm:p-10 backdrop-blur-xl relative overflow-hidden">
+            
+            <!-- Welcome Screen -->
+            <div id="welcome-screen" class="space-y-6 text-center">
+                <div class="w-16 h-16 bg-gradient-to-tr from-indigo-500 to-cyan-400 rounded-2xl mx-auto flex items-center justify-center shadow-lg shadow-indigo-500/20 text-white font-bold text-2xl">
+                    📊
+                </div>
+                <div class="space-y-2">
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white">Descubre tu Perfil de Riesgo</h2>
+                    <p class="text-slate-400 max-w-md mx-auto text-sm sm:text-base">
+                        Responde este breve cuestionario de 5 preguntas para conocer qué tipo de inversor eres y qué estrategias se adaptan mejor a ti.
+                    </p>
+                </div>
+                <div class="flex flex-col sm:flex-row justify-center items-center gap-3">
+                    <button onclick="startQuiz()" class="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-indigo-600 to-cyan-500 hover:from-indigo-500 hover:to-cyan-400 text-white font-semibold rounded-xl shadow-lg shadow-indigo-600/30 transition-all duration-300 transform hover:-translate-y-0.5">
+                        Comenzar Cuestionario
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quiz Questions Screen (Hidden initially) -->
+            <div id="quiz-screen" class="hidden space-y-6">
+                <!-- Progress bar -->
+                <div class="space-y-2">
+                    <div class="flex justify-between text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                        <span id="progress-text">Pregunta 1 de 5</span>
+                        <span id="progress-percent">20%</span>
+                    </div>
+                    <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                        <div id="progress-bar" class="bg-gradient-to-r from-indigo-500 to-cyan-400 h-full w-1/5 transition-all duration-300 rounded-full"></div>
+                    </div>
+                </div>
+
+                <!-- Question Container -->
+                <div id="question-container" class="space-y-6 py-4">
+                    <!-- Dynamic question content inserted via JS -->
+                </div>
+
+                <!-- Navigation buttons -->
+                <div class="flex justify-between pt-4 border-t border-slate-800">
+                    <button id="prev-btn" onclick="prevQuestion()" class="hidden px-5 py-2.5 rounded-xl border border-slate-700 hover:bg-slate-800 text-slate-300 font-medium text-sm transition-all">
+                        Anterior
+                    </button>
+                    <div class="ml-auto">
+                        <button id="next-btn" onclick="nextQuestion()" disabled class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium rounded-xl shadow-md transition-all text-sm">
+                            Siguiente
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Screen (Hidden initially) -->
+            <div id="results-screen" class="hidden space-y-6 text-center">
+                <div class="w-20 h-20 bg-gradient-to-tr from-emerald-500 to-cyan-500 rounded-3xl mx-auto flex items-center justify-center shadow-xl shadow-emerald-500/20 text-4xl">
+                    🎯
+                </div>
+                <div class="space-y-2">
+                    <span class="text-xs uppercase font-bold tracking-widest text-emerald-400 px-3 py-1 bg-emerald-500/10 rounded-full border border-emerald-500/20">Resultado Oficial</span>
+                    <h2 id="result-title" class="text-3xl font-extrabold text-white pt-2">Perfil Conservador</h2>
+                    <p id="result-description" class="text-slate-300 max-w-lg mx-auto text-sm sm:text-base pt-2">
+                        Prefieres proteger tu capital antes que arriesgarlo en busca de grandes rentabilidades. Te sientes cómodo con instrumentos estables.
+                    </p>
+                </div>
+
+                <div class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-5 text-left space-y-3">
+                    <h4 class="text-sm font-semibold text-indigo-300 uppercase tracking-wide">💡 Distribución Recomendada</h4>
+                    <p id="result-allocation" class="text-sm text-slate-300">
+                        80% Renta Fija (Bonos, Cuentas de Ahorro) / 20% Renta Variable (Acciones de bajo riesgo).
+                    </p>
+                </div>
+
+                <div class="flex flex-col sm:flex-row justify-center gap-3 pt-2">
+                    <button onclick="resetQuiz()" class="px-8 py-3 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-semibold rounded-xl shadow-md transition-all text-sm">
+                        Volver a Realizar el Test
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="w-full py-4 text-center text-xs text-slate-500 border-t border-slate-800/60">
+        <p>Herramienta educativa de perfil de riesgo financiero. Los resultados son orientativos.</p>
+    </footer>
+
+    <script>
+        const questions = [
+            {
+                title: "¿Cuál es tu horizonte temporal de inversión?",
+                subtitle: "¿Durante cuánto tiempo planeas mantener invertido tu dinero sin necesitar retirarlo?",
+                options: [
+                    { text: "Menos de 1 año (Corto plazo)", points: 1 },
+                    { text: "Entre 1 y 3 años (Mediano plazo)", points: 2 },
+                    { text: "Entre 3 y 5 años", points: 3 },
+                    { text: "Más de 5 años (Largo plazo)", points: 4 }
+                ]
+            },
+            {
+                title: "¿Cómo reaccionarías si tus inversiones pierden un 15% en un mes?",
+                subtitle: "Imagina que revisas tu cartera y ves una caída temporal importante.",
+                options: [
+                    { text: "Me asustaría y vendería todo inmediatamente para evitar más pérdidas.", points: 1 },
+                    { text: "Me preocuparía, pero mantendría la calma esperando que se recupere.", points: 2 },
+                    { text: "Es algo normal del mercado; mantendría mi estrategia sin cambios.", points: 3 },
+                    { text: "Aprovecharía para comprar más activos a menor precio (oportunidad).", points: 4 }
+                ]
+            },
+            {
+                title: "¿Cuál es tu principal objetivo financiero?",
+                subtitle: "Busca la meta que mejor describa tu propósito al invertir.",
+                options: [
+                    { text: "Proteger mis ahorros de la inflación sin asumir riesgos de pérdida.", points: 1 },
+                    { text: "Generar ingresos periódicos estables y seguros.", points: 2 },
+                    { text: "Hacer crecer mi capital moderadamente equilibrando riesgo y retorno.", points: 3 },
+                    { text: "Maximizar el crecimiento de mi patrimonio a largo plazo asumiendo volatilidad.", points: 4 }
+                ]
+            },
+            {
+                title: "¿Qué porcentaje de tus ahorros totales estás destinando a esta inversión?",
+                subtitle: "Evalúa qué tan importante es este dinero para tu estabilidad diaria.",
+                options: [
+                    { text: "Es la mayor parte de mis ahorros o fondo de emergencia.", points: 1 },
+                    { text: "Una parte significativa, pero tengo respaldo financiero.", points: 2 },
+                    { text: "Un porcentaje moderado que no afecta mi día a día.", points: 3 },
+                    { text: "Una pequeña parte de mis ahorros destinada puramente a experimentar o crecer.", points: 4 }
+                ]
+            },
+            {
+                title: "De las siguientes opciones de inversión, ¿cuál elegirías?",
+                subtitle: "Selecciona la alternativa que más confianza te inspire.",
+                options: [
+                    { text: "Depósitos a plazo fijo o cuentas de ahorro garantizadas.", points: 1 },
+                    { text: "Bonos corporativos y fondos de deuda de bajo riesgo.", points: 2 },
+                    { text: "Una combinación equilibrada de acciones estables y bonos corporativos.", points: 3 },
+                    { text: "Acciones tecnológicas de alto crecimiento y criptomonedas o mercados emergentes.", points: 4 }
+                ]
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let userAnswers = new Array(questions.length).fill(null);
+
+        const welcomeScreen = document.getElementById('welcome-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultsScreen = document.getElementById('results-screen');
+        const questionContainer = document.getElementById('question-container');
+        const progressBar = document.getElementById('progress-bar');
+        const progressText = document.getElementById('progress-text');
+        const progressPercent = document.getElementById('progress-percent');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+
+        function startQuiz() {
+            welcomeScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+            currentQuestionIndex = 0;
+            userAnswers.fill(null);
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const q = questions[currentQuestionIndex];
+            
+            const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+            progressBar.style.width = `${progress}%`;
+            progressText.innerText = `Pregunta ${currentQuestionIndex + 1} de ${questions.length}`;
+            progressPercent.innerText = `${Math.round(progress)}%`;
+
+            if (currentQuestionIndex > 0) {
+                prevBtn.classList.remove('hidden');
+            } else {
+                prevBtn.classList.add('hidden');
+            }
+
+            if (currentQuestionIndex === questions.length - 1) {
+                nextBtn.innerText = "Ver Resultados";
+            } else {
+                nextBtn.innerText = "Siguiente";
+            }
+
+            const selectedOption = userAnswers[currentQuestionIndex];
+            nextBtn.disabled = selectedOption === null;
+
+            let html = `
+                <div class="space-y-2">
+                    <h3 class="text-xl font-semibold text-white">${q.title}</h3>
+                    <p class="text-sm text-slate-400">${q.subtitle}</p>
+                </div>
+                <div class="space-y-3 pt-2">
+            `;
+
+            q.options.forEach((opt, idx) => {
+                const isSelected = selectedOption === idx;
+                html += `
+                    <button onclick="selectOption(${idx})" class="w-full text-left p-4 rounded-xl border transition-all duration-200 flex items-center justify-between group ${isSelected ? 'bg-indigo-600/20 border-indigo-500 text-white shadow-md shadow-indigo-500/10' : 'bg-slate-800/50 border-slate-700/80 hover:bg-slate-800 text-slate-300 hover:border-slate-600'}">
+                        <span class="text-sm sm:text-base font-medium pr-4">${opt.text}</span>
+                        <div class="w-5 h-5 rounded-full border flex items-center justify-center shrink-0 ${isSelected ? 'border-indigo-400 bg-indigo-500 text-white' : 'border-slate-600 group-hover:border-slate-500'}">
+                            ${isSelected ? '<div class="w-2 h-2 bg-white rounded-full"></div>' : ''}
+                        </div>
+                    </button>
+                `;
+            });
+
+            html += `</div>`;
+            questionContainer.innerHTML = html;
+        }
+
+        function selectOption(optionIndex) {
+            userAnswers[currentQuestionIndex] = optionIndex;
+            nextBtn.disabled = false;
+            renderQuestion();
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                renderQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                renderQuestion();
+            }
+        }
+
+        function showResults() {
+            quizScreen.classList.add('hidden');
+            resultsScreen.classList.remove('hidden');
+
+            let totalPoints = 0;
+            userAnswers.forEach((ansIndex, qIndex) => {
+                if (ansIndex !== null) {
+                    totalPoints += questions[qIndex].options[ansIndex].points;
+                }
+            });
+
+            const resultTitle = document.getElementById('result-title');
+            const resultDescription = document.getElementById('result-description');
+            const resultAllocation = document.getElementById('result-allocation');
+
+            if (totalPoints <= 8) {
+                resultTitle.innerText = "Perfil Conservador";
+                resultDescription.innerText = "Priorizas la seguridad y la preservación de tu capital por encima de la rentabilidad alta. No toleras ver pérdidas en tus ahorros.";
+                resultAllocation.innerText = "80% Renta Fija (Cuentas de ahorro, depósitos a plazo, bonos soberanos) / 20% Renta Variable de bajo riesgo.";
+            } else if (totalPoints <= 14) {
+                resultTitle.innerText = "Perfil Moderado / Equilibrado";
+                resultDescription.innerText = "Buscas un equilibrio entre la seguridad y el crecimiento. Estás dispuesto a asumir cierta volatilidad moderada a cambio de mejores retornos a mediano y largo plazo.";
+                resultAllocation.innerText = "50% Renta Fija / 50% Renta Variable (Fondos indexados globales y acciones diversificadas de empresas sólidas).";
+            } else {
+                resultTitle.innerText = "Perfil Agresivo / Arriesgado";
+                resultDescription.innerText = "Tu objetivo principal es maximizar el crecimiento a largo plazo. Tienes gran tolerancia a la volatilidad y entiendes que las caídas temporales son parte del camino hacia una mayor rentabilidad.";
+                resultAllocation.innerText = "15% Renta Fija / 85% Renta Variable (Acciones de crecimiento, mercados emergentes y activos de alta volatilidad).";
+            }
+        }
+
+        function resetQuiz() {
+            resultsScreen.classList.add('hidden');
+            welcomeScreen.classList.remove('hidden');
+            userAnswers.fill(null);
+            currentQuestionIndex = 0;
+        }
+    </script>
+</body>
+</html>
